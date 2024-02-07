@@ -1,17 +1,21 @@
 import { GatewayManager } from "@filebase/sdk";
+import Table from "tty-table";
+import inquirer from "inquirer";
 
 export default class GatewayModule {
   constructor(program, credentials) {
-    program
-      .command("gateway create <name>")
+    const subcommand = program.command("gateway");
+
+    subcommand
+      .command("create <name>")
       .option("-d, --domain <domain>")
       .option("-e, --enabled <state>")
       .option("-p, --private <private>")
       .description("creates a new gateway with the specified name")
       .action(async (name, options) => {
         const gatewayManager = new GatewayManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         let gatewayOptions = {};
         if (typeof options.domain === "string") {
@@ -26,50 +30,76 @@ export default class GatewayModule {
         await gatewayManager.create(name, gatewayOptions);
       });
 
-    program
-      .command("gateway delete <name>")
+    subcommand
+      .command("delete <name>")
       .description("deletes a gateway with the specified name")
       .action(async (name) => {
         const gatewayManager = new GatewayManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
-        //TODO: Confirm with inquirer
-        await gatewayManager.delete(name);
+        const answers = await inquirer.prompt([
+          {
+            type: "input",
+            name: "confirm_delete",
+            message: `Are you sure you want to delete the gateway named [${name}]? Y/n`,
+          },
+        ]);
+        if (answers["confirm_delete"] === "Y") {
+          await gatewayManager.delete(name);
+          console.log(`Deleted Gateway: ${name}`);
+        }
       });
 
-    program
-      .command("gateway list")
+    subcommand
+      .command("list")
       .description("lists the gateways")
       .action(async () => {
         const gatewayManager = new GatewayManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
-        await gatewayManager.list();
+        const gateways = await gatewayManager.list();
+        const table = Table(
+          [
+            { value: "name" },
+            { value: "domain" },
+            { value: "enabled" },
+            { value: "private" },
+            { value: "created_at" },
+            { value: "updated_at" },
+          ],
+          gateways,
+          undefined,
+          {
+            borderStyle: "solid",
+            borderColor: "white",
+          },
+        ).render();
+        console.log(table);
       });
 
-    program
-      .command("gateway toggle <name> <state>")
+    subcommand
+      .command("toggle <name> <state>")
       .description("toggles the enabled state of a gateway")
       .action(async (name, state) => {
         const gatewayManager = new GatewayManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         await gatewayManager.toggle(name, state);
       });
 
-    program
-      .command("gateway update <name>")
+    subcommand
+      .command("update <name>")
       .option("-d, --domain <domain>")
       .option("-e, --enabled <state>")
       .option("-p, --private <private>")
       .description("creates a new gateway with the specified name")
       .action(async (name, options) => {
         const gatewayManager = new GatewayManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         let gatewayOptions = {};
         if (typeof options.domain === "string") {

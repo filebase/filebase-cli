@@ -1,16 +1,63 @@
 import { PinManager } from "@filebase/sdk";
+import inquirer from "inquirer";
+import Table from "tty-table";
 
 export default class PinModule {
   constructor(program, credentials) {
-    program
+    const subcommand = program.command("pin");
+
+    subcommand
+      .command("list")
+      .description("lists the pins")
+      .action(async () => {
+        const pinManager = new PinManager(
+          await credentials.get("key"),
+          await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
+        );
+        const pins = (await pinManager.list()).results.map((pin) => {
+          const newPinInfo = {
+            ...pin,
+            ...pin.pin,
+          };
+          newPinInfo.delegates = pin.delegates.join("\n");
+          newPinInfo.info = JSON.stringify(pin.info);
+          newPinInfo.meta = JSON.stringify(pin.pin.meta);
+          return newPinInfo;
+        });
+        const table = Table(
+          [
+            { value: "requestid" },
+            { value: "status" },
+            { value: "created" },
+            { value: "cid" },
+            { value: "name" },
+            { value: "origins" },
+            { value: "meta" },
+            { value: "delegates" },
+            { value: "info" },
+          ],
+          pins,
+          undefined,
+          {
+            borderStyle: "solid",
+            borderColor: "white",
+          },
+        ).render();
+        console.log(table);
+      });
+
+    subcommand
       .command("pin create <key> <cid>")
       .option("-b, --bucket <bucket>")
       .option("-m, --metadata <metadata>")
       .description("creates a new pin with the specified key")
       .action(async (key, cid, options) => {
         const pinManager = new PinManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         let pinOptions = {};
         if (typeof options.bucket === "string") {
@@ -19,7 +66,7 @@ export default class PinModule {
         await pinManager.create(key, cid, options.metadata, pinOptions);
       });
 
-    program
+    subcommand
       .command("pin replace <requestid> <cid>")
       .option("-b, --bucket <bucket>")
       .option("-m, --metadata <metadata>")
@@ -27,8 +74,8 @@ export default class PinModule {
       .description("replaces a pin with the specified cid")
       .action(async (requestid, cid, options) => {
         const pinManager = new PinManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         let pinOptions = {};
         if (typeof options.metadata === "string") {
@@ -40,46 +87,55 @@ export default class PinModule {
         await pinManager.replace(requestid, cid, pinOptions);
       });
 
-    program
+    subcommand
       .command("pin download <cid>")
       .option("-b, --bucket <bucket>")
       .option("-d, --destination <destination>")
       .description("downloads a pin with the specified cid")
       .action(async (cid) => {
         const pinManager = new PinManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
           {
-            endpoint: credentials.get("endpoint"),
-            token: credentials.get("token"),
+            endpoint: await credentials.get("endpoint"),
+            token: await credentials.get("token"),
           },
         );
         await pinManager.download(cid);
       });
 
-    program
+    subcommand
       .command("pin get <requestid>")
       .option("-b, --bucket <bucket>")
       .description("gets information about a pin with the specified requestid")
       .action(async (requestid) => {
         const pinManager = new PinManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         await pinManager.get(requestid);
       });
 
-    program
+    subcommand
       .command("pin delete <requestid>")
       .option("-b, --bucket <bucket>")
       .description("deletes a pin with the specified requestid")
       .action(async (requestid) => {
         const pinManager = new PinManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
-        //TODO: Confirm with inquirer
-        await pinManager.delete(requestid);
+        const answers = await inquirer.prompt([
+          {
+            type: "input",
+            name: "confirm_delete",
+            message: `Are you sure you want to delete the pin with requestid [${requestid}]? Y/n`,
+          },
+        ]);
+        if (answers["confirm_delete"] === "Y") {
+          await pinManager.delete(requestid);
+          console.log(`Deleted Pin: ${requestid}`);
+        }
       });
 
     return program;

@@ -2,31 +2,31 @@ import { Command } from "commander";
 
 export default class AuthModule {
   constructor(program, credentials) {
-    function makeAuthCommand() {
-      const auth = new Command("auth");
-      auth
-        .command("auth login <key> <secret>")
-        .description("logs into account")
-        .action((key, secret) => {
-          credentials.set("key", key);
-          credentials.set("secret", secret);
-        });
+    const subcommand = program.command("auth");
 
-      auth
-        .command("auth default bucket <name>")
-        .description("sets default bucket")
-        .action((name) => {
-          credentials.set("bucket", name);
-        });
+    subcommand
+      .command("login <key> <secret> [bucket]")
+      .description("logs into account")
+      .action((key, secret, bucket = undefined) => {
+        credentials.set("key", key);
+        credentials.set("secret", secret);
+        if (typeof bucket === "string") {
+          credentials.set("bucket", bucket);
+        }
+      });
 
-      auth
-        .command("auth logout")
-        .description("logs out account")
-        .action(() => {
-          credentials.clear();
-        });
-      return auth;
-    }
-    program.addCommand(makeAuthCommand());
+    subcommand
+      .command("bucket <name>")
+      .description("sets default bucket")
+      .action((name) => {
+        credentials.set("bucket", name);
+      });
+
+    subcommand
+      .command("logout")
+      .description("logs out account")
+      .action(() => {
+        credentials.clear();
+      });
   }
 }

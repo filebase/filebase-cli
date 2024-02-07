@@ -1,15 +1,19 @@
 import { NameManager } from "@filebase/sdk";
+import Table from "tty-table";
+import inquirer from "inquirer";
 
 export default class NameModule {
   constructor(program, credentials) {
-    program
-      .command("name create <label> <cid>")
+    const subcommand = program.command("name");
+
+    subcommand
+      .command("create <label> <cid>")
       .option("-e, --enabled <state>")
       .description("creates a new name with the specified label")
       .action(async (label, cid, options) => {
         const nameManager = new NameManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         let nameOptions = {};
         if (typeof options.enabled === "boolean") {
@@ -18,14 +22,14 @@ export default class NameModule {
         await nameManager.create(label, cid, nameOptions);
       });
 
-    program
-      .command("name import <label> <cid> <privateKey>")
+    subcommand
+      .command("import <label> <cid> <privateKey>")
       .option("-e, --enabled <state>")
       .description("creates a new name with the specified label")
       .action(async (label, cid, privateKey, options) => {
         const nameManager = new NameManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         let nameOptions = {};
         if (typeof options.enabled === "boolean") {
@@ -34,48 +38,77 @@ export default class NameModule {
         await nameManager.import(label, cid, privateKey, nameOptions);
       });
 
-    program
-      .command("name delete <label>")
+    subcommand
+      .command("delete <label>")
       .description("deletes a name with the specified label")
       .action(async (label) => {
         const nameManager = new NameManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
-        //TODO: Confirm with inquirer
-        await nameManager.delete(label);
+        const answers = await inquirer.prompt([
+          {
+            type: "input",
+            name: "confirm_delete",
+            message: `Are you sure you want to delete the name labeled [${label}]? Y/n`,
+          },
+        ]);
+        if (answers["confirm_delete"] === "Y") {
+          await nameManager.delete(label);
+          console.log(`Deleted Name: ${label}`);
+        }
       });
 
-    program
-      .command("name list")
+    subcommand
+      .command("list")
       .description("lists the names")
       .action(async () => {
         const nameManager = new NameManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
-        await nameManager.list();
+        const names = await nameManager.list();
+        const table = Table(
+          [
+            { value: "label" },
+            { value: "network_key" },
+            { value: "cid" },
+            { value: "sequence" },
+            { value: "enabled" },
+            { value: "published_at" },
+            { value: "created_at" },
+            { value: "updated_at" },
+          ],
+          names,
+          undefined,
+          {
+            borderStyle: "solid",
+            borderColor: "white",
+            truncate: true,
+          },
+        ).render();
+        console.log(table);
       });
 
-    program
-      .command("name toggle <label> <state>")
+    subcommand
+      .command("toggle <label> <state>")
       .description("toggles the enabled state of a name")
       .action(async (label, state) => {
         const nameManager = new NameManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         await nameManager.toggle(label, state);
       });
 
-    program
-      .command("name update <label> <cid>")
+    subcommand
+      .command("update <label> <cid>")
       .option("-e, --enabled <state>")
       .description("creates a new gateway with the specified name")
       .action(async (label, options) => {
         const nameManager = new NameManager(
-          credentials.get("key"),
-          credentials.get("secret"),
+          await credentials.get("key"),
+          await credentials.get("secret"),
         );
         let nameOptions = {};
         if (typeof options.enabled === "boolean") {
