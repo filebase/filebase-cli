@@ -58,6 +58,9 @@ export default class PinModule {
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         let pinOptions = {};
         if (typeof options.bucket === "string") {
@@ -76,6 +79,9 @@ export default class PinModule {
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         let pinOptions = {};
         if (typeof options.metadata === "string") {
@@ -112,6 +118,9 @@ export default class PinModule {
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         await pinManager.get(requestid);
       });
@@ -124,12 +133,15 @@ export default class PinModule {
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         const answers = await inquirer.prompt([
           {
             type: "input",
             name: "confirm_delete",
-            message: `Are you sure you want to delete the pin with requestid [${requestid}]? Y/n`,
+            message: `Are you sure you want to delete the pin with requestid [${requestid}]? Yes/No`,
           },
         ]);
         if (answers["confirm_delete"] === "Y") {

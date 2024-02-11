@@ -21,11 +21,11 @@ export default class GatewayModule {
         if (typeof options.domain === "string") {
           gatewayOptions.domain = options.domain;
         }
-        if (typeof options.enabled === "boolean") {
-          gatewayOptions.enabled = options.enabled;
+        if (typeof options.enabled === "string") {
+          gatewayOptions.enabled = options.enabled === "true";
         }
-        if (typeof options.private === "boolean") {
-          gatewayOptions.private = options.private;
+        if (typeof options.private === "string") {
+          gatewayOptions.private = options.private === "true";
         }
         await gatewayManager.create(name, gatewayOptions);
       });
@@ -42,7 +42,7 @@ export default class GatewayModule {
           {
             type: "input",
             name: "confirm_delete",
-            message: `Are you sure you want to delete the gateway named [${name}]? Y/n`,
+            message: `Are you sure you want to delete the gateway named [${name}]? Yes/No`,
           },
         ]);
         if (answers["confirm_delete"] === "Y") {
@@ -105,11 +105,11 @@ export default class GatewayModule {
         if (typeof options.domain === "string") {
           gatewayOptions.domain = options.domain;
         }
-        if (typeof options.enabled === "boolean") {
-          gatewayOptions.enabled = options.enabled;
+        if (typeof options.enabled === "string") {
+          gatewayOptions.enabled = options.enabled === "true";
         }
-        if (typeof options.private === "boolean") {
-          gatewayOptions.private = options.private;
+        if (typeof options.private === "string") {
+          gatewayOptions.private = options.private === "true";
         }
         await gatewayManager.update(name, gatewayOptions);
       });

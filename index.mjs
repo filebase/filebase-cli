@@ -9,6 +9,7 @@ import GatewayModule from "./modules/gateway.mjs";
 import NameModule from "./modules/name.mjs";
 import ObjectModule from "./modules/object.mjs";
 import PinModule from "./modules/pin.mjs";
+import VersionModule from "./modules/version.mjs";
 
 const program = new Command(),
   configPath = path.resolve(os.tmpdir(), "filebase-cli", "main.db");
@@ -56,6 +57,7 @@ new GatewayModule(program, credentials);
 new NameModule(program, credentials);
 new ObjectModule(program, credentials);
 new PinModule(program, credentials);
+new VersionModule(program);
 
 // Parse Modules and Start Program
 await program.parseAsync(process.argv);

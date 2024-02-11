@@ -16,8 +16,8 @@ export default class NameModule {
           await credentials.get("secret"),
         );
         let nameOptions = {};
-        if (typeof options.enabled === "boolean") {
-          nameOptions.enabled = options.enabled;
+        if (typeof options.enabled === "string") {
+          nameOptions.enabled = options.enabled === "true";
         }
         await nameManager.create(label, cid, nameOptions);
       });
@@ -32,8 +32,8 @@ export default class NameModule {
           await credentials.get("secret"),
         );
         let nameOptions = {};
-        if (typeof options.enabled === "boolean") {
-          nameOptions.enabled = options.enabled;
+        if (typeof options.enabled === "string") {
+          nameOptions.enabled = options.enabled === "true";
         }
         await nameManager.import(label, cid, privateKey, nameOptions);
       });
@@ -50,7 +50,7 @@ export default class NameModule {
           {
             type: "input",
             name: "confirm_delete",
-            message: `Are you sure you want to delete the name labeled [${label}]? Y/n`,
+            message: `Are you sure you want to delete the name labeled [${label}]? Yes/No`,
           },
         ]);
         if (answers["confirm_delete"] === "Y") {
@@ -111,8 +111,8 @@ export default class NameModule {
           await credentials.get("secret"),
         );
         let nameOptions = {};
-        if (typeof options.enabled === "boolean") {
-          nameOptions.enabled = options.enabled;
+        if (typeof options.enabled === "string") {
+          nameOptions.enabled = options.enabled === "true";
         }
         await nameManager.update(label, nameOptions);
       });

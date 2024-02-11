@@ -29,7 +29,7 @@ export default class BucketModule {
           {
             type: "input",
             name: "confirm_delete",
-            message: `Are you sure you want to delete the bucket named [${name}]? Y/n`,
+            message: `Are you sure you want to delete the bucket named [${name}]? Yes/No`,
           },
         ]);
         if (answers["confirm_delete"] === "Y") {

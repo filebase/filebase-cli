@@ -15,11 +15,14 @@ export default class ObjectModule {
         const objectManager = new ObjectManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         //todo: fixup to support file and directory uploads based on the source
         let nameOptions = {};
-        if (typeof options.enabled === "boolean") {
-          nameOptions.enabled = options.enabled;
+        if (typeof options.enabled === "string") {
+          nameOptions.enabled = options.enabled === "true";
         }
         await objectManager.upload(label, cid, nameOptions);
       });
@@ -32,6 +35,9 @@ export default class ObjectModule {
         const objectManager = new ObjectManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         await objectManager.get(key);
       });
@@ -45,6 +51,9 @@ export default class ObjectModule {
         const objectManager = new ObjectManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         await objectManager.download(key);
       });
@@ -57,12 +66,15 @@ export default class ObjectModule {
         const objectManager = new ObjectManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         const answers = await inquirer.prompt([
           {
             type: "input",
             name: "confirm_delete",
-            message: `Are you sure you want to delete the object with key [${key}]? Y/n`,
+            message: `Are you sure you want to delete the object with key [${key}]? Yes/No`,
           },
         ]);
         if (answers["confirm_delete"] === "Y") {
@@ -79,12 +91,16 @@ export default class ObjectModule {
         const objectManager = new ObjectManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         const objects = (await objectManager.list()).Contents;
         const table = Table(
           [
             { value: "Key", alias: "name" },
             { value: "CID", alias: "cid" },
+            { value: "ETag", alias: "etag" },
             { value: "Size", alias: "size" },
             { value: "LastModified", alias: "last_modified" },
           ],
@@ -108,6 +124,9 @@ export default class ObjectModule {
         const objectManager = new ObjectManager(
           await credentials.get("key"),
           await credentials.get("secret"),
+          {
+            bucket: await credentials.get("bucket"),
+          },
         );
         let objectCopyOptions = {};
         await objectManager.copy(key, destinationBucket, objectCopyOptions);
