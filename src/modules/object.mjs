@@ -23,28 +23,27 @@ export default class ObjectModule {
             bucket: credentials.get("bucket"),
           },
         );
-        if (stdin) {
-          await objectManager.upload(key, stdin);
-        } else {
+        let objectToUpload = stdin;
+        if (!stdin) {
           if (typeof source === "undefined") {
             throw new Error(`Source must be defined if not piping in a file`);
           }
           const resolvedSource = resolve(source);
           const pathStats = await stat(resolvedSource);
           if (pathStats.isFile()) {
-            const readStream = createReadStream(resolvedSource);
-            await objectManager.upload(key, readStream);
+            objectToUpload = createReadStream(resolvedSource);
           } else {
             const { files } = await rfs.read(resolvedSource);
-            const filesToUpload = files.map((file) => {
+            objectToUpload = files.map((file) => {
               return {
                 path: file.replace(resolvedSource, ""),
                 content: createReadStream(file),
               };
             });
-            await objectManager.upload(key, filesToUpload);
           }
         }
+        const uploadedObject = await objectManager.upload(key, objectToUpload);
+        console.log(uploadedObject.cid);
       });
 
     subcommand
