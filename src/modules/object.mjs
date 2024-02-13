@@ -1,30 +1,50 @@
+import { createReadStream } from "node:fs";
+import { stat } from "node:fs/promises";
+import { resolve } from "node:path";
 import { ObjectManager } from "@filebase/sdk";
 import inquirer from "inquirer";
 import Table from "tty-table";
+import rfs from "recursive-fs";
 
 export default class ObjectModule {
-  constructor(program, credentials) {
+  constructor(program, credentials, stdin) {
     const subcommand = program.command("object");
 
     subcommand
-      .command("upload <key> <source>")
+      .command("upload <key> [source]")
       .option("-m, --metadata <metadata>")
       .option("-b, --bucket <bucket>")
       .description("creates a new name with the specified label")
-      .action(async (label, cid, options) => {
+      .action(async (key, source, options) => {
         const objectManager = new ObjectManager(
-          await credentials.get("key"),
-          await credentials.get("secret"),
+          credentials.get("key"),
+          credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: credentials.get("bucket"),
           },
         );
-        //todo: fixup to support file and directory uploads based on the source
-        let nameOptions = {};
-        if (typeof options.enabled === "string") {
-          nameOptions.enabled = options.enabled === "true";
+        if (stdin) {
+          await objectManager.upload(key, stdin);
+        } else {
+          if (typeof source === "undefined") {
+            throw new Error(`Source must be defined if not piping in a file`);
+          }
+          const resolvedSource = resolve(source);
+          const pathStats = await stat(resolvedSource);
+          if (pathStats.isFile()) {
+            const readStream = createReadStream(resolvedSource);
+            await objectManager.upload(key, readStream);
+          } else {
+            const { files } = await rfs.read(resolvedSource);
+            const filesToUpload = files.map((file) => {
+              return {
+                path: file.replace(resolvedSource, ""),
+                content: createReadStream(file),
+              };
+            });
+            await objectManager.upload(key, filesToUpload);
+          }
         }
-        await objectManager.upload(label, cid, nameOptions);
       });
 
     subcommand
@@ -33,10 +53,10 @@ export default class ObjectModule {
       .description("gets a object with the specified key")
       .action(async (key) => {
         const objectManager = new ObjectManager(
-          await credentials.get("key"),
-          await credentials.get("secret"),
+          credentials.get("key"),
+          credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: credentials.get("bucket"),
           },
         );
         await objectManager.get(key);
@@ -49,10 +69,10 @@ export default class ObjectModule {
       .description("downloads a object with the specified key")
       .action(async (key) => {
         const objectManager = new ObjectManager(
-          await credentials.get("key"),
-          await credentials.get("secret"),
+          credentials.get("key"),
+          credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: credentials.get("bucket"),
           },
         );
         await objectManager.download(key);
@@ -64,10 +84,10 @@ export default class ObjectModule {
       .description("deletes a name with the specified label")
       .action(async (key) => {
         const objectManager = new ObjectManager(
-          await credentials.get("key"),
-          await credentials.get("secret"),
+          credentials.get("key"),
+          credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: credentials.get("bucket"),
           },
         );
         const answers = await inquirer.prompt([
@@ -89,10 +109,10 @@ export default class ObjectModule {
       .description("lists the objects")
       .action(async () => {
         const objectManager = new ObjectManager(
-          await credentials.get("key"),
-          await credentials.get("secret"),
+          credentials.get("key"),
+          credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: credentials.get("bucket"),
           },
         );
         const objects = (await objectManager.list()).Contents;
@@ -122,10 +142,10 @@ export default class ObjectModule {
       .description("copies the objects")
       .action(async (key, destinationBucket, options) => {
         const objectManager = new ObjectManager(
-          await credentials.get("key"),
-          await credentials.get("secret"),
+          credentials.get("key"),
+          credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: credentials.get("bucket"),
           },
         );
         let objectCopyOptions = {};

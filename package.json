@@ -8,10 +8,11 @@
     "inject": "postject filebase-cli NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2"
   },
   "dependencies": {
+    "@filebase/sdk": "1.0.3",
     "@inquirer/select": "2.0.0",
     "commander": "11.1.0",
-    "@filebase/sdk": "1.0.3",
     "inquirer": "9.2.14",
+    "recursive-fs": "2.1.0",
     "tty-table": "4.2.3"
   },
   "devDependencies": {
