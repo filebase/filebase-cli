@@ -10,6 +10,7 @@ export default defineConfig({
     "blockstore-fs",
     "commander",
     "inquirer",
+    "recursive-fs",
     "tty-table",
   ],
   external: [],
