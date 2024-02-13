@@ -1,16 +1,23 @@
 {
   "name": "filebase-cli",
   "version": "1.0.0",
-  "main": "index.mjs",
+  "main": "src/index.mjs",
+  "scripts": {
+    "build": "tsup src/index.mjs --format cjs --dts --clean",
+    "package": "node --experimental-sea-config sea-config.json",
+    "inject": "postject filebase-cli NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2"
+  },
   "dependencies": {
     "@inquirer/select": "2.0.0",
     "commander": "11.1.0",
+    "@filebase/sdk": "1.0.3",
     "inquirer": "9.2.14",
-    "knex": "3.1.0",
-    "sqlite3": "5.1.7",
     "tty-table": "4.2.3"
   },
   "devDependencies": {
-    "prettier": "3.2.4"
+    "postject": "1.0.0-alpha.6",
+    "prettier": "3.2.4",
+    "tsup": "8.0.1",
+    "typescript": "5.3.3"
   }
 }

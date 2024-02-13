@@ -6,8 +6,7 @@ export default class VersionModule {
       .command("version")
       .description("prints the current version")
       .action(() => {
-        const { version } = JSON.parse(fs.readFileSync("./package.json"));
-        console.log(`v${version}`);
+        console.log(`v1.0.0`);
       });
   }
 }
