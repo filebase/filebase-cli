@@ -1,5 +1,3 @@
-import fs from "node:fs";
-
 export default class VersionModule {
   constructor(program) {
     program

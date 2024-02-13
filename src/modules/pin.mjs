@@ -3,8 +3,11 @@ import inquirer from "inquirer";
 import Table from "tty-table";
 
 export default class PinModule {
-  constructor(program, credentials) {
+  constructor(program, completion, credentials) {
     const subcommand = program.command("pin");
+    completion.on("pin", ({ reply }) => {
+      reply(["create", "replace", "download", "get", "delete", "list", "help"]);
+    });
 
     subcommand
       .command("list")
@@ -50,7 +53,7 @@ export default class PinModule {
       });
 
     subcommand
-      .command("pin create <key> <cid>")
+      .command("create <key> <cid>")
       .option("-b, --bucket <bucket>")
       .option("-m, --metadata <metadata>")
       .description("creates a new pin with the specified key")
@@ -70,7 +73,7 @@ export default class PinModule {
       });
 
     subcommand
-      .command("pin replace <requestid> <cid>")
+      .command("replace <requestid> <cid>")
       .option("-b, --bucket <bucket>")
       .option("-m, --metadata <metadata>")
       .option("-n, --name <name>")
@@ -94,7 +97,7 @@ export default class PinModule {
       });
 
     subcommand
-      .command("pin download <cid>")
+      .command("download <cid>")
       .option("-b, --bucket <bucket>")
       .option("-d, --destination <destination>")
       .description("downloads a pin with the specified cid")
@@ -111,7 +114,7 @@ export default class PinModule {
       });
 
     subcommand
-      .command("pin get <requestid>")
+      .command("get <requestid>")
       .option("-b, --bucket <bucket>")
       .description("gets information about a pin with the specified requestid")
       .action(async (requestid) => {
@@ -126,7 +129,7 @@ export default class PinModule {
       });
 
     subcommand
-      .command("pin delete <requestid>")
+      .command("delete <requestid>")
       .option("-b, --bucket <bucket>")
       .description("deletes a pin with the specified requestid")
       .action(async (requestid) => {

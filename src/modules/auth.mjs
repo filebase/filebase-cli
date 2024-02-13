@@ -3,8 +3,11 @@ import select from "@inquirer/select";
 import { BucketManager } from "@filebase/sdk";
 
 export default class AuthModule {
-  constructor(program, credentials) {
+  constructor(program, completion, credentials) {
     const subcommand = program.command("auth");
+    completion.on("auth", ({ reply }) => {
+      reply(["login", "bucket", "logout", "help"]);
+    });
 
     subcommand
       .command("login [key] [secret] [bucket]")

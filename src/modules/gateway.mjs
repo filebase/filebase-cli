@@ -3,8 +3,11 @@ import Table from "tty-table";
 import inquirer from "inquirer";
 
 export default class GatewayModule {
-  constructor(program, credentials) {
+  constructor(program, completion, credentials) {
     const subcommand = program.command("gateway");
+    completion.on("gateway", ({ reply }) => {
+      reply(["create", "delete", "list", "toggle", "update", "help"]);
+    });
 
     subcommand
       .command("create <name>")

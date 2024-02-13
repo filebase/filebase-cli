@@ -7,8 +7,11 @@ import Table from "tty-table";
 import rfs from "recursive-fs";
 
 export default class ObjectModule {
-  constructor(program, credentials, stdin) {
+  constructor(program, completion, credentials, stdin) {
     const subcommand = program.command("object");
+    completion.on("object", ({ reply }) => {
+      reply(["upload", "get", "download", "delete", "list", "copy", "help"]);
+    });
 
     subcommand
       .command("upload <key> [source]")

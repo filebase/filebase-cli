@@ -4,6 +4,7 @@ import { resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { once } from "node:events";
 import { Command } from "commander";
+import omelette from "omelette";
 import AuthModule from "./modules/auth.mjs";
 import BucketModule from "./modules/bucket.mjs";
 import GatewayModule from "./modules/gateway.mjs";
@@ -49,19 +50,14 @@ import VersionModule from "./modules/version.mjs";
     },
   };
 
-  // Load Modules into Program
-  new AuthModule(program, credentials);
-  new BucketModule(program, credentials);
-  new GatewayModule(program, credentials);
-  new NameModule(program, credentials);
-  new PinModule(program, credentials);
-  new VersionModule(program);
+  // Setup Auto Completion
+  const completion = omelette(
+    `filebase-cli <auth> <bucket> <gateway> <object> <name> <pin> <version>`,
+  );
 
-  // Parse Modules and Start Program
-  if (process.stdin.isTTY) {
-    new ObjectModule(program, credentials);
-  } else {
-    let stdin = "";
+  // Handle Piped Input
+  let stdin = "";
+  if (!process.stdin.isTTY) {
     process.stdin.on("readable", function () {
       let chunk = this.read();
       if (chunk !== null) {
@@ -69,7 +65,18 @@ import VersionModule from "./modules/version.mjs";
       }
     });
     await once(process.stdin, "end");
-    new ObjectModule(program, credentials, stdin);
   }
+
+  // Load Modules into Program
+  new AuthModule(program, completion, credentials);
+  new BucketModule(program, completion, credentials);
+  new GatewayModule(program, completion, credentials);
+  new NameModule(program, completion, credentials);
+  new ObjectModule(program, completion, credentials, stdin);
+  new PinModule(program, completion, credentials);
+  new VersionModule(program);
+
+  // Parse Modules and Start Program
   await program.parseAsync(process.argv);
+  completion.init();
 })();

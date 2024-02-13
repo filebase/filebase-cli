@@ -3096,6 +3096,11 @@ object.assign@^4.1.4:
     has-symbols "^1.0.3"
     object-keys "^1.1.1"
 
+omelette@0.4.17:
+  version "0.4.17"
+  resolved "https://registry.yarnpkg.com/omelette/-/omelette-0.4.17.tgz#24f3ed85cfdd11d8365f16368c7169f8dc422d73"
+  integrity sha512-UlU69G6Bhu0XFjw3tjFZ0qyiMUjAOR+rdzblA1nLQ8xiqFtxOVlkhM39BlgTpLFx9fxkm6rnxNNRsS5GxE/yww==
+
 onetime@^5.1.0, onetime@^5.1.2:
   version "5.1.2"
   resolved "https://registry.yarnpkg.com/onetime/-/onetime-5.1.2.tgz#d0e96ebb56b07476df1dd9c4806e5237985ca45e"

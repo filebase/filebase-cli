@@ -3,8 +3,11 @@ import Table from "tty-table";
 import inquirer from "inquirer";
 
 export default class NameModule {
-  constructor(program, credentials) {
+  constructor(program, completion, credentials) {
     const subcommand = program.command("name");
+    completion.on("name", ({ reply }) => {
+      reply(["create", "import", "delete", "list", "toggle", "update", "help"]);
+    });
 
     subcommand
       .command("create <label> <cid>")

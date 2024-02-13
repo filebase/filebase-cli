@@ -12,6 +12,7 @@
     "@inquirer/select": "2.0.0",
     "commander": "11.1.0",
     "inquirer": "9.2.14",
+    "omelette": "0.4.17",
     "recursive-fs": "2.1.0",
     "tty-table": "4.2.3"
   },
