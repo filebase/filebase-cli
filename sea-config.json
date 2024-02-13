@@ -1,5 +1,6 @@
 {
   "main": "dist/index.js",
   "output": "sea-prep.blob",
-  "disableExperimentalSEAWarning": true
+  "disableExperimentalSEAWarning": true,
+  "useCodeCache": true
 }
