@@ -3,7 +3,7 @@ import Table from "tty-table";
 import inquirer from "inquirer";
 
 export default class NameModule {
-  constructor(program, completion, credentials) {
+  constructor(program, credentials) {
     const subcommand = program
       .command("name")
       .description("create and manage names");

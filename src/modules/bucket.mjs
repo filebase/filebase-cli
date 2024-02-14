@@ -3,7 +3,7 @@ import Table from "tty-table";
 import inquirer from "inquirer";
 
 export default class BucketModule {
-  constructor(program, completion, credentials) {
+  constructor(program, credentials) {
     const subcommand = program
       .command("bucket")
       .description("create and manage buckets");

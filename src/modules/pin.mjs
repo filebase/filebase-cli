@@ -3,7 +3,7 @@ import inquirer from "inquirer";
 import Table from "tty-table";
 
 export default class PinModule {
-  constructor(program, completion, credentials) {
+  constructor(program, credentials) {
     const subcommand = program
       .command("pin")
       .description("create and manage pins");

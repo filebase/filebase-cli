@@ -7,7 +7,7 @@ import Table from "tty-table";
 import rfs from "recursive-fs";
 
 export default class ObjectModule {
-  constructor(program, completion, credentials, stdin) {
+  constructor(program, credentials, stdin) {
     const subcommand = program
       .command("object")
       .description("upload and manage objects");
