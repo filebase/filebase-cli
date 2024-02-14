@@ -4,10 +4,9 @@ import inquirer from "inquirer";
 
 export default class NameModule {
   constructor(program, completion, credentials) {
-    const subcommand = program.command("name");
-    completion.on("name", ({ reply }) => {
-      reply(["create", "import", "delete", "list", "toggle", "update", "help"]);
-    });
+    const subcommand = program
+      .command("name")
+      .description("create and manage names");
 
     subcommand
       .command("create <label> <cid>")

@@ -4,10 +4,9 @@ import Table from "tty-table";
 
 export default class PinModule {
   constructor(program, completion, credentials) {
-    const subcommand = program.command("pin");
-    completion.on("pin", ({ reply }) => {
-      reply(["create", "replace", "download", "get", "delete", "list", "help"]);
-    });
+    const subcommand = program
+      .command("pin")
+      .description("create and manage pins");
 
     subcommand
       .command("list")

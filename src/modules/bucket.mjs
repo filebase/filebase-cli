@@ -4,10 +4,9 @@ import inquirer from "inquirer";
 
 export default class BucketModule {
   constructor(program, completion, credentials) {
-    const subcommand = program.command("bucket");
-    completion.on("bucket", ({ reply }) => {
-      reply(["create", "delete", "list", "privacy", "help"]);
-    });
+    const subcommand = program
+      .command("bucket")
+      .description("create and manage buckets");
 
     subcommand
       .command("create <name>")
@@ -80,7 +79,5 @@ export default class BucketModule {
           console.log(state ? "Private" : "Public");
         }
       });
-
-    return program;
   }
 }

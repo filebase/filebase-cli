@@ -8,10 +8,9 @@ import rfs from "recursive-fs";
 
 export default class ObjectModule {
   constructor(program, completion, credentials, stdin) {
-    const subcommand = program.command("object");
-    completion.on("object", ({ reply }) => {
-      reply(["upload", "get", "download", "delete", "list", "copy", "help"]);
-    });
+    const subcommand = program
+      .command("object")
+      .description("upload and manage objects");
 
     subcommand
       .command("upload <key> [source]")

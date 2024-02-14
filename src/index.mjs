@@ -51,9 +51,17 @@ import VersionModule from "./modules/version.mjs";
   };
 
   // Setup Auto Completion
-  const completion = omelette(
-    `filebase-cli <auth> <bucket> <gateway> <object> <name> <pin> <version>`,
-  );
+  omelette("filebase|fb")
+    .tree({
+      auth: ["login", "bucket", "logout", "help"],
+      bucket: ["create", "delete", "list", "privacy", "help"],
+      gateway: ["create", "delete", "list", "toggle", "update", "help"],
+      name: ["create", "import", "delete", "list", "toggle", "update", "help"],
+      object: ["upload", "get", "download", "delete", "list", "copy", "help"],
+      pin: ["create", "replace", "download", "get", "delete", "list", "help"],
+      version: [],
+    })
+    .init();
 
   // Handle Piped Input
   let stdin = "";
@@ -68,15 +76,14 @@ import VersionModule from "./modules/version.mjs";
   }
 
   // Load Modules into Program
-  new AuthModule(program, completion, credentials);
-  new BucketModule(program, completion, credentials);
-  new GatewayModule(program, completion, credentials);
-  new NameModule(program, completion, credentials);
-  new ObjectModule(program, completion, credentials, stdin);
-  new PinModule(program, completion, credentials);
+  new AuthModule(program, credentials);
+  new BucketModule(program, credentials);
+  new GatewayModule(program, credentials);
+  new NameModule(program, credentials);
+  new ObjectModule(program, credentials, stdin);
+  new PinModule(program, credentials);
   new VersionModule(program);
 
   // Parse Modules and Start Program
   await program.parseAsync(process.argv);
-  completion.init();
 })();

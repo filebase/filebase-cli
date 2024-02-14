@@ -4,10 +4,9 @@ import inquirer from "inquirer";
 
 export default class GatewayModule {
   constructor(program, completion, credentials) {
-    const subcommand = program.command("gateway");
-    completion.on("gateway", ({ reply }) => {
-      reply(["create", "delete", "list", "toggle", "update", "help"]);
-    });
+    const subcommand = program
+      .command("gateway")
+      .description("create and manage gateways");
 
     subcommand
       .command("create <name>")
