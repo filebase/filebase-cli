@@ -1,5 +1,5 @@
 import { constants as fsConstants } from "node:fs";
-import { access, open, readFile, writeFile } from "node:fs/promises";
+import { access, open, readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { tmpdir } from "node:os";
 import { once } from "node:events";
@@ -15,7 +15,8 @@ import VersionModule from "./modules/version.mjs";
 
 (async () => {
   const program = new Command(),
-    configPath = resolve(tmpdir(), "filebase-cli", "main.config");
+    configRoot = resolve(tmpdir(), "filebase-cli"),
+    configPath = resolve(configRoot, "main.config");
 
   program.hook("postAction", (thisCommand, actionCommand) => {
     process.exit(0);
@@ -25,6 +26,7 @@ import VersionModule from "./modules/version.mjs";
     await access(configPath, fsConstants.F_OK);
   } catch (err) {
     if (err.code === "ENOENT") {
+      await mkdir(configRoot);
       await (await open(configPath, "w")).close();
     } else {
       throw err;

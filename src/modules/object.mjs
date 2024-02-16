@@ -1,5 +1,5 @@
 import { createReadStream } from "node:fs";
-import { stat } from "node:fs/promises";
+import { stat, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { ObjectManager } from "@filebase/sdk";
 import inquirer from "inquirer";
@@ -60,7 +60,27 @@ export default class ObjectModule {
             bucket: credentials.get("bucket"),
           },
         );
-        await objectManager.get(key);
+        const objectDetails = await objectManager.get(key);
+        objectDetails.Key = key;
+        objectDetails.Metadata = JSON.stringify(objectDetails.Metadata);
+        const table = Table(
+          [
+            { value: "Key", alias: "name" },
+            { value: "ETag", alias: "etag" },
+            { value: "ContentType", alias: "content_type" },
+            { value: "ContentLength", alias: "size" },
+            { value: "LastModified", alias: "last_modified" },
+            { value: "Metadata", alias: "metadata" },
+          ],
+          [objectDetails],
+          undefined,
+          {
+            borderStyle: "solid",
+            borderColor: "white",
+            truncate: true,
+          },
+        ).render();
+        console.log(table);
       });
 
     subcommand
@@ -76,7 +96,8 @@ export default class ObjectModule {
             bucket: credentials.get("bucket"),
           },
         );
-        await objectManager.download(key);
+        const readStream = await objectManager.download(key);
+        await writeFile(resolve(process.cwd(), key), readStream);
       });
 
     subcommand
@@ -98,7 +119,7 @@ export default class ObjectModule {
             message: `Are you sure you want to delete the object with key [${key}]? Yes/No`,
           },
         ]);
-        if (answers["confirm_delete"] === "Y") {
+        if (answers["confirm_delete"] === "Yes") {
           await objectManager.delete(key);
           console.log(`Deleted Object: ${key}`);
         }
@@ -120,7 +141,6 @@ export default class ObjectModule {
         const table = Table(
           [
             { value: "Key", alias: "name" },
-            { value: "CID", alias: "cid" },
             { value: "ETag", alias: "etag" },
             { value: "Size", alias: "size" },
             { value: "LastModified", alias: "last_modified" },

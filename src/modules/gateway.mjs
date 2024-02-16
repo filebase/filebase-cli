@@ -47,7 +47,7 @@ export default class GatewayModule {
             message: `Are you sure you want to delete the gateway named [${name}]? Yes/No`,
           },
         ]);
-        if (answers["confirm_delete"] === "Y") {
+        if (answers["confirm_delete"] === "Yes") {
           await gatewayManager.delete(name);
           console.log(`Deleted Gateway: ${name}`);
         }

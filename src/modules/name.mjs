@@ -55,7 +55,7 @@ export default class NameModule {
             message: `Are you sure you want to delete the name labeled [${label}]? Yes/No`,
           },
         ]);
-        if (answers["confirm_delete"] === "Y") {
+        if (answers["confirm_delete"] === "Yes") {
           await nameManager.delete(label);
           console.log(`Deleted Name: ${label}`);
         }
@@ -107,7 +107,7 @@ export default class NameModule {
       .command("update <label> <cid>")
       .option("-e, --enabled <state>")
       .description("creates a new gateway with the specified name")
-      .action(async (label, options) => {
+      .action(async (label, cid, options) => {
         const nameManager = new NameManager(
           await credentials.get("key"),
           await credentials.get("secret"),
@@ -116,7 +116,7 @@ export default class NameModule {
         if (typeof options.enabled === "string") {
           nameOptions.enabled = options.enabled === "true";
         }
-        await nameManager.update(label, nameOptions);
+        await nameManager.update(label, cid, nameOptions);
       });
 
     return program;

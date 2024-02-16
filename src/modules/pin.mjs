@@ -124,7 +124,34 @@ export default class PinModule {
             bucket: await credentials.get("bucket"),
           },
         );
-        await pinManager.get(requestid);
+        const pin = await pinManager.get(requestid);
+        const pinDetails = {
+          ...pin,
+          ...pin.pin,
+        };
+        pinDetails.delegates = pin.delegates.join("\n");
+        pinDetails.info = JSON.stringify(pin.info);
+        pinDetails.meta = JSON.stringify(pin.pin.meta);
+        const table = Table(
+          [
+            { value: "requestid" },
+            { value: "status" },
+            { value: "created" },
+            { value: "cid" },
+            { value: "name" },
+            { value: "origins" },
+            { value: "meta" },
+            { value: "delegates" },
+            { value: "info" },
+          ],
+          [pinDetails],
+          undefined,
+          {
+            borderStyle: "solid",
+            borderColor: "white",
+          },
+        ).render();
+        console.log(table);
       });
 
     subcommand
@@ -146,7 +173,7 @@ export default class PinModule {
             message: `Are you sure you want to delete the pin with requestid [${requestid}]? Yes/No`,
           },
         ]);
-        if (answers["confirm_delete"] === "Y") {
+        if (answers["confirm_delete"] === "Yes") {
           await pinManager.delete(requestid);
           console.log(`Deleted Pin: ${requestid}`);
         }

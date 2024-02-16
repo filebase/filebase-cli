@@ -34,7 +34,7 @@ export default class BucketModule {
             message: `Are you sure you want to delete the bucket named [${name}]? Yes/No`,
           },
         ]);
-        if (answers["confirm_delete"] === "Y") {
+        if (answers["confirm_delete"] === "Yes") {
           await bucketManager.delete(name);
           console.log(`Deleted Bucket: ${name}`);
         }
