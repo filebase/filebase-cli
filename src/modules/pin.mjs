@@ -1,6 +1,8 @@
 import { PinManager } from "@filebase/sdk";
 import inquirer from "inquirer";
 import Table from "tty-table";
+import { writeFile } from "node:fs/promises";
+import { resolve } from "node:path";
 
 export default class PinModule {
   constructor(program, credentials) {
@@ -109,7 +111,8 @@ export default class PinModule {
             token: await credentials.get("token"),
           },
         );
-        await pinManager.download(cid);
+        const readStream = await pinManager.download(cid);
+        await writeFile(resolve(process.cwd(), cid), readStream);
       });
 
     subcommand

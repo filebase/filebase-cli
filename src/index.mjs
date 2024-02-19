@@ -12,6 +12,7 @@ import NameModule from "./modules/name.mjs";
 import ObjectModule from "./modules/object.mjs";
 import PinModule from "./modules/pin.mjs";
 import VersionModule from "./modules/version.mjs";
+import InstallModule from "./modules/install.mjs";
 
 (async () => {
   const program = new Command(),
@@ -53,7 +54,7 @@ import VersionModule from "./modules/version.mjs";
   };
 
   // Setup Auto Completion
-  omelette("filebase|fb")
+  const completion = omelette("filebase|fb")
     .tree({
       auth: ["login", "bucket", "logout", "help"],
       bucket: ["create", "delete", "list", "privacy", "help"],
@@ -81,6 +82,7 @@ import VersionModule from "./modules/version.mjs";
   new AuthModule(program, credentials);
   new BucketModule(program, credentials);
   new GatewayModule(program, credentials);
+  new InstallModule(program, completion);
   new NameModule(program, credentials);
   new ObjectModule(program, credentials, stdin);
   new PinModule(program, credentials);
