@@ -1,11 +1,11 @@
 {
   "name": "filebase-cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "src/index.mjs",
   "scripts": {
-    "build": "tsup src/index.mjs --format cjs --dts --clean",
+    "build": "tsup src/index.mjs",
     "package": "node --experimental-sea-config sea-config.json",
-    "inject": "postject filebase-cli NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2"
+    "inject": "postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2"
   },
   "dependencies": {
     "@filebase/sdk": "1.0.3",

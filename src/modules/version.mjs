@@ -4,7 +4,7 @@ export default class VersionModule {
       .command("version")
       .description("prints the current version")
       .action(() => {
-        console.log(`v1.0.0`);
+        console.log(`v0.0.1`);
       });
   }
 }
