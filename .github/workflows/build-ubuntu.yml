@@ -17,7 +17,7 @@ jobs:
       - run: yarn run package
       - run: cp $(command -v node) filebase
       - run: yarn run inject
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
           name: filebase
           path: filebase
