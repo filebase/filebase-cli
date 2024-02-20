@@ -1,9 +1,9 @@
-name: Build CLI - Ubuntu
+name: Build CLI
 
 on: [push]
 
 jobs:
-  test:
+  build-ubuntu:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,6 +19,25 @@ jobs:
       - run: yarn run inject
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase
+          name: filebase-ubuntu
+          path: filebase
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '21.x'
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+      - run: yarn run package
+      - run: cp $(command -v node) filebase
+      - run: yarn run inject
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filebase-macos
           path: filebase
 
