@@ -98,11 +98,11 @@ export default class PinModule {
       });
 
     subcommand
-      .command("download <cid>")
+      .command("download <cid> [outputPath]")
       .option("-b, --bucket <bucket>")
       .option("-d, --destination <destination>")
       .description("downloads a pin with the specified cid")
-      .action(async (cid) => {
+      .action(async (cid, output = undefined) => {
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
@@ -112,7 +112,10 @@ export default class PinModule {
           },
         );
         const readStream = await pinManager.download(cid);
-        await writeFile(resolve(process.cwd(), cid), readStream);
+        await writeFile(
+          output ? resolve(output) : resolve(process.cwd(), cid),
+          readStream,
+        );
       });
 
     subcommand

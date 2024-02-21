@@ -84,11 +84,11 @@ export default class ObjectModule {
       });
 
     subcommand
-      .command("download <key>")
+      .command("download <key> [outputPath]")
       .option("-b, --bucket <bucket>")
       .option("-d, --destination <destination>")
       .description("downloads a object with the specified key")
-      .action(async (key) => {
+      .action(async (key, output = undefined) => {
         const objectManager = new ObjectManager(
           credentials.get("key"),
           credentials.get("secret"),
@@ -97,7 +97,10 @@ export default class ObjectModule {
           },
         );
         const readStream = await objectManager.download(key);
-        await writeFile(resolve(process.cwd(), key), readStream);
+        await writeFile(
+          output ? resolve(output) : resolve(process.cwd(), key),
+          readStream,
+        );
       });
 
     subcommand
