@@ -1,12 +1,34 @@
 {
-  "name": "filebase-cli",
+  "name": "@filebase/cli",
   "version": "0.0.1",
+  "description": "CLI for Interacting with Filebase Services [S3(Buckets, Objects), IPFS(Gateways, Pins) IPNS(Names)]",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/filebase/filebase-sdk.git"
+  },
   "license": "MIT",
-  "main": "src/index.mjs",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "scripts": {
     "build": "tsup src/index.mjs",
     "package": "node --experimental-sea-config sea-config.json"
   },
+  "keywords": [
+    "filebase",
+    "filebase-cli",
+    "s3",
+    "ipfs",
+    "ipns",
+    "cli",
+    "web3",
+    "distributed"
+  ],
   "dependencies": {
     "@filebase/sdk": "1.0.3",
     "@inquirer/select": "2.0.0",

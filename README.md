@@ -1,6 +1,11 @@
 <h1 align="center">&#x2022; Filebase CLI &#x2022;</h1>
 <p align="center">Developer Friendly [ <a href="https://docs.ipfs.tech/concepts/what-is-ipfs/" title="What is IPFS?">IPFS</a> | <a href="https://docs.ipfs.tech/concepts/ipns/" title="What is IPNS?">IPNS</a> | S3 ]</p>
 
+## Beta
+
+This CLI is currently in Beta.  If you find any issues please kindly file a report.  
+Thank you for your patience while this project is developed!
+
 ## About
 
 The Filebase CLI provides a hybrid data management solution, blending S3-compatible cloud storage with IPFS
@@ -34,6 +39,27 @@ delete the object and finally delete the bucket.
 To use the CLI in your project, use npm or yarn to install the [`@filebase/cli`](https://www.npmjs.com/package/@filebase/cli) module.  Requires node.js 16+.
 You can also find pre-built binaries in the releases section.
 
+Using NPX
+```shell
+// Login
+npx @filebase/cli auth login [key] [secret]
+// Create Bucket 
+npx @filebase/cli create bucket random-bucket-name
+// Set Default Bucket
+npx @filebase/cli auth bucket random-bucket-name
+// Upload Random File
+npx @filebase/cli object upload random-file ./random-file.txt
+// Download Random File
+npx @filebase/cli object download random-file
+// Create IPNS Name
+npx @filebase/cli name create myFirstIpnsKey QmQSQYNn2K6xTDLhfNcoTjBExz5Q5gpHHBTqZZKdxsPRB9
+// Create IPFS Gateway
+npx @filebase/cli gateway create myFirstIpfsGateway
+// Create IPFS Pin
+npx @filebase/cli pin create my-pin QmTJkc7crTuPG7xRmCQSz1yioBpCW3juFBtJPXhQfdCqGF
+```
+
+Using Binary
 ```shell
 // Login
 filebase auth login [key] [secret]
@@ -52,5 +78,3 @@ filebase gateway create myFirstIpfsGateway
 // Create IPFS Pin
 filebase pin create my-pin QmTJkc7crTuPG7xRmCQSz1yioBpCW3juFBtJPXhQfdCqGF
 ```
-
-Full API reference doc for the JS client are available at https://filebase.github.io/filebase-cli
