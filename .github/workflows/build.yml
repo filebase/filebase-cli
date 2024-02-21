@@ -1,0 +1,67 @@
+name: Build CLI
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+      - run: yarn run package
+      - run: cp $(command -v node) filebase
+      - run: npx postject filebase_ NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filebase_linux-amd64
+          path: filebase
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+      - run: yarn run package
+      - run: cp $(command -v node) filebase
+      - run: codesign --remove-signature filebase
+      - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
+      - run: codesign --sign - filebase
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filebase-macos
+          path: filebase
+
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+      - run: yarn run package
+      - run: node -e "require('fs').copyFileSync(process.execPath, 'filebase.exe')"
+      - run: npx postject filebase.exe NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filebase-windows
+          path: filebase.exe
+
