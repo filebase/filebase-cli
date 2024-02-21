@@ -1,6 +1,9 @@
 name: Build CLI
 
-on: [push]
+on:
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   build-ubuntu:
@@ -16,10 +19,10 @@ jobs:
       - run: yarn run build
       - run: yarn run package
       - run: cp $(command -v node) filebase
-      - run: yarn run inject
+      - run: npx postject filebase_ NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase-ubuntu
+          name: filebase_linux-amd64
           path: filebase
 
   build-macos:
@@ -36,7 +39,7 @@ jobs:
       - run: yarn run package
       - run: cp $(command -v node) filebase
       - run: codesign --remove-signature filebase
-      - run: yarn run inject
+      - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - run: codesign --sign - filebase
       - uses: actions/upload-artifact@v4
         with:
