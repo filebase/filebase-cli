@@ -12,7 +12,8 @@ export default class NameModule {
       .command("create <label> <cid>")
       .option("-e, --enabled <state>")
       .description("creates a new name with the specified label")
-      .action(async (label, cid, options) => {
+      .action(async (label, cid) => {
+        const options = program.opts();
         const nameManager = new NameManager(
           await credentials.get("key"),
           await credentials.get("secret"),
@@ -28,7 +29,8 @@ export default class NameModule {
       .command("import <label> <cid> <privateKey>")
       .option("-e, --enabled <state>")
       .description("creates a new name with the specified label")
-      .action(async (label, cid, privateKey, options) => {
+      .action(async (label, cid, privateKey) => {
+        const options = program.opts();
         const nameManager = new NameManager(
           await credentials.get("key"),
           await credentials.get("secret"),
@@ -107,7 +109,8 @@ export default class NameModule {
       .command("update <label> <cid>")
       .option("-e, --enabled <state>")
       .description("creates a new gateway with the specified name")
-      .action(async (label, cid, options) => {
+      .action(async (label, cid) => {
+        const options = program.opts();
         const nameManager = new NameManager(
           await credentials.get("key"),
           await credentials.get("secret"),

@@ -13,12 +13,14 @@ export default class PinModule {
     subcommand
       .command("list")
       .description("lists the pins")
+      .option("-b, --bucket <bucket>")
       .action(async () => {
+        const options = program.opts();
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: options.bucket || (await credentials.get("bucket")),
           },
         );
         const pins = (await pinManager.list()).results.map((pin) => {
@@ -58,17 +60,18 @@ export default class PinModule {
       .option("-b, --bucket <bucket>")
       .option("-m, --metadata <metadata>")
       .description("creates a new pin with the specified key")
-      .action(async (key, cid, options) => {
+      .action(async (key, cid) => {
+        const options = program.opts();
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: options.bucket || (await credentials.get("bucket")),
           },
         );
         let pinOptions = {};
-        if (typeof options.bucket === "string") {
-          pinOptions.bucket = options.bucket;
+        if (typeof options.metadata === "string") {
+          pinOptions.metadata = options.metadata;
         }
         await pinManager.create(key, cid, options.metadata, pinOptions);
       });
@@ -79,12 +82,13 @@ export default class PinModule {
       .option("-m, --metadata <metadata>")
       .option("-n, --name <name>")
       .description("replaces a pin with the specified cid")
-      .action(async (requestid, cid, options) => {
+      .action(async (requestid, cid) => {
+        const options = program.opts();
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: options.bucket || (await credentials.get("bucket")),
           },
         );
         let pinOptions = {};
@@ -99,8 +103,6 @@ export default class PinModule {
 
     subcommand
       .command("download <cid> [outputPath]")
-      .option("-b, --bucket <bucket>")
-      .option("-d, --destination <destination>")
       .description("downloads a pin with the specified cid")
       .action(async (cid, output = undefined) => {
         const pinManager = new PinManager(
@@ -123,11 +125,12 @@ export default class PinModule {
       .option("-b, --bucket <bucket>")
       .description("gets information about a pin with the specified requestid")
       .action(async (requestid) => {
+        const options = program.opts();
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: options.bucket || (await credentials.get("bucket")),
           },
         );
         const pin = await pinManager.get(requestid);
@@ -165,11 +168,12 @@ export default class PinModule {
       .option("-b, --bucket <bucket>")
       .description("deletes a pin with the specified requestid")
       .action(async (requestid) => {
+        const options = program.opts();
         const pinManager = new PinManager(
           await credentials.get("key"),
           await credentials.get("secret"),
           {
-            bucket: await credentials.get("bucket"),
+            bucket: options.bucket || (await credentials.get("bucket")),
           },
         );
         const answers = await inquirer.prompt([

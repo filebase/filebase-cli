@@ -1,10 +1,17 @@
+// threading setup
+import os from "node:os";
+const CPU_COUNT = os.cpus().length;
+process.env.UV_THREADPOOL_SIZE = String(CPU_COUNT);
+// node imports
 import { constants as fsConstants } from "node:fs";
 import { access, open, readFile, writeFile, mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { homedir } from "node:os";
 import { once } from "node:events";
+// external imports
 import { Command } from "commander";
 import omelette from "omelette";
+// application imports
 import AuthModule from "./modules/auth.mjs";
 import BucketModule from "./modules/bucket.mjs";
 import GatewayModule from "./modules/gateway.mjs";

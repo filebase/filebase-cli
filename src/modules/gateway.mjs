@@ -9,18 +9,20 @@ export default class GatewayModule {
       .description("create and manage gateways");
 
     subcommand
-      .command("create <name>")
-      .option("-d, --domain <domain>")
+      .command("create <name> [domain]")
       .option("-e, --enabled <state>")
       .option("-p, --private <private>")
-      .description("creates a new gateway with the specified name")
-      .action(async (name, options) => {
+      .description(
+        "creates a new gateway with the specified name and optional custom domain name",
+      )
+      .action(async (name, domain = undefined) => {
+        const options = program.opts();
         const gatewayManager = new GatewayManager(
           await credentials.get("key"),
           await credentials.get("secret"),
         );
         let gatewayOptions = {};
-        if (typeof options.domain === "string") {
+        if (typeof domain === "string") {
           gatewayOptions.domain = options.domain;
         }
         if (typeof options.enabled === "string") {
@@ -93,18 +95,18 @@ export default class GatewayModule {
       });
 
     subcommand
-      .command("update <name>")
-      .option("-d, --domain <domain>")
+      .command("update <name> [domain]")
       .option("-e, --enabled <state>")
       .option("-p, --private <private>")
-      .description("creates a new gateway with the specified name")
-      .action(async (name, options) => {
+      .description("updates a gateway with the specified name")
+      .action(async (name, domain) => {
+        const options = program.opts();
         const gatewayManager = new GatewayManager(
           await credentials.get("key"),
           await credentials.get("secret"),
         );
         let gatewayOptions = {};
-        if (typeof options.domain === "string") {
+        if (typeof domain === "string") {
           gatewayOptions.domain = options.domain;
         }
         if (typeof options.enabled === "string") {

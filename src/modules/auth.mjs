@@ -36,10 +36,10 @@ export default class AuthModule {
             key = key || answers["s3_key"];
             secret = secret || answers["s3_secret"];
           }
-          credentials.set("key", key);
-          credentials.set("secret", secret);
+          await credentials.set("key", key);
+          await credentials.set("secret", secret);
           if (typeof bucket === "string") {
-            credentials.set("bucket", bucket);
+            await credentials.set("bucket", bucket);
           } else {
             await this.promptDefaultBucket(credentials);
           }
@@ -51,7 +51,7 @@ export default class AuthModule {
       .description("sets default bucket")
       .action(async (name = undefined) => {
         if (typeof name === "string") {
-          credentials.set("bucket", name);
+          await credentials.set("bucket", name);
         } else {
           await this.promptDefaultBucket(credentials);
         }
@@ -60,8 +60,8 @@ export default class AuthModule {
     subcommand
       .command("logout")
       .description("logs out account")
-      .action(() => {
-        credentials.clear();
+      .action(async () => {
+        await credentials.clear();
       });
   }
 

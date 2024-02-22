@@ -17,12 +17,13 @@ export default class ObjectModule {
       .option("-m, --metadata <metadata>")
       .option("-b, --bucket <bucket>")
       .description("creates a new name with the specified label")
-      .action(async (key, source, options) => {
+      .action(async (key, source) => {
+        const options = program.opts();
         const objectManager = new ObjectManager(
           credentials.get("key"),
           credentials.get("secret"),
           {
-            bucket: credentials.get("bucket"),
+            bucket: options.bucket || credentials.get("bucket"),
           },
         );
         let objectToUpload = stdin;
@@ -44,7 +45,15 @@ export default class ObjectModule {
             });
           }
         }
-        const uploadedObject = await objectManager.upload(key, objectToUpload);
+        let objectMetadata;
+        if (typeof options.metadata === "string") {
+          objectMetadata = options.metadata;
+        }
+        const uploadedObject = await objectManager.upload(
+          key,
+          objectToUpload,
+          objectMetadata,
+        );
         console.log(uploadedObject.cid);
       });
 
@@ -53,11 +62,12 @@ export default class ObjectModule {
       .option("-b, --bucket <bucket>")
       .description("gets a object with the specified key")
       .action(async (key) => {
+        const options = program.opts();
         const objectManager = new ObjectManager(
           credentials.get("key"),
           credentials.get("secret"),
           {
-            bucket: credentials.get("bucket"),
+            bucket: options.bucket || credentials.get("bucket"),
           },
         );
         const objectDetails = await objectManager.get(key);
@@ -86,14 +96,14 @@ export default class ObjectModule {
     subcommand
       .command("download <key> [outputPath]")
       .option("-b, --bucket <bucket>")
-      .option("-d, --destination <destination>")
       .description("downloads a object with the specified key")
       .action(async (key, output = undefined) => {
+        const options = program.opts();
         const objectManager = new ObjectManager(
           credentials.get("key"),
           credentials.get("secret"),
           {
-            bucket: credentials.get("bucket"),
+            bucket: options.bucket || credentials.get("bucket"),
           },
         );
         const readStream = await objectManager.download(key);
@@ -108,11 +118,12 @@ export default class ObjectModule {
       .option("-b, --bucket <bucket>")
       .description("deletes a name with the specified label")
       .action(async (key) => {
+        const options = program.opts();
         const objectManager = new ObjectManager(
           credentials.get("key"),
           credentials.get("secret"),
           {
-            bucket: credentials.get("bucket"),
+            bucket: options.bucket || credentials.get("bucket"),
           },
         );
         const answers = await inquirer.prompt([
@@ -133,11 +144,12 @@ export default class ObjectModule {
       .option("-b, --bucket <bucket>")
       .description("lists the objects")
       .action(async () => {
+        const options = program.opts();
         const objectManager = new ObjectManager(
           credentials.get("key"),
           credentials.get("secret"),
           {
-            bucket: credentials.get("bucket"),
+            bucket: options.bucket || credentials.get("bucket"),
           },
         );
         const objects = (await objectManager.list()).Contents;
@@ -160,19 +172,23 @@ export default class ObjectModule {
       });
 
     subcommand
-      .command("copy <key> <destinationBucket>")
+      .command("copy <key> <destinationBucket> [destinationKey]")
       .option("-b, --bucket <bucket>")
       .option("-k, --key <destinationKey>")
       .description("copies the objects")
-      .action(async (key, destinationBucket, options) => {
+      .action(async (key, destinationBucket, destinationKey) => {
+        const options = program.opts();
         const objectManager = new ObjectManager(
           credentials.get("key"),
           credentials.get("secret"),
           {
-            bucket: credentials.get("bucket"),
+            bucket: options.bucket || credentials.get("bucket"),
           },
         );
         let objectCopyOptions = {};
+        if (typeof destinationKey === "string") {
+          objectCopyOptions.destinationKey = destinationKey;
+        }
         await objectManager.copy(key, destinationBucket, objectCopyOptions);
       });
 
