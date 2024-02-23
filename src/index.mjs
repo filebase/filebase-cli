@@ -57,6 +57,10 @@ import InstallModule from "./modules/install.mjs";
       currentConfig[key] = value;
       await writeFile(configPath, JSON.stringify(currentConfig));
     },
+    delete: async (key) => {
+      delete currentConfig[key];
+      await writeFile(configPath, JSON.stringify(currentConfig));
+    },
     get: (key) => {
       if (typeof currentConfig[key] !== "undefined") {
         return currentConfig[key];

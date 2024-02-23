@@ -1,6 +1,6 @@
 import inquirer from "inquirer";
 import select from "@inquirer/select";
-import { BucketManager } from "@filebase/sdk";
+import { BucketManager, GatewayManager } from "@filebase/sdk";
 
 export default class AuthModule {
   constructor(program, credentials) {
@@ -42,6 +42,7 @@ export default class AuthModule {
             await credentials.set("bucket", bucket);
           } else {
             await this.promptDefaultBucket(credentials);
+            await this.promptDefaultGateway(credentials);
           }
         },
       );
@@ -54,6 +55,17 @@ export default class AuthModule {
           await credentials.set("bucket", name);
         } else {
           await this.promptDefaultBucket(credentials);
+        }
+      });
+
+    subcommand
+      .command("gateway [endpoint]")
+      .description("sets default gateway endpoint")
+      .action(async (endpoint = undefined) => {
+        if (typeof endpoint === "string") {
+          await credentials.set("endpoint", endpoint);
+        } else {
+          await this.promptDefaultGateway(credentials);
         }
       });
 
@@ -87,6 +99,44 @@ export default class AuthModule {
     });
     if (answer !== "No Selection") {
       await credentials.set("bucket", answer);
+    } else {
+      await credentials.delete("bucket");
+    }
+  }
+
+  async promptDefaultGateway(credentials) {
+    const gatewayManager = new GatewayManager(
+      await credentials.get("key"),
+      await credentials.get("secret"),
+    );
+    const gateways = (await gatewayManager.list()).map((gateway) => {
+      const gatewayEndpoint =
+        gateway.domain || `${gateway.name}.myfilebase.com`;
+      return {
+        name: `${gateway.name} (${gatewayEndpoint})`,
+        value: `https://${gatewayEndpoint}`,
+      };
+    });
+    const choices = [{ name: "No Selection", value: "No Selection" }]
+      .concat(gateways)
+      .concat([{ name: "Custom", value: "Custom" }]);
+    const answer = await select({
+      message: "Default Gateway:",
+      choices,
+    });
+    if (answer === "No Selection") {
+      await credentials.delete("endpoint");
+    } else if (answer === "Custom") {
+      const answers = await inquirer.prompt([
+        {
+          type: "input",
+          name: "endpoint",
+          message: `Custom Endpoint:`,
+        },
+      ]);
+      await credentials.set("endpoint", answers["endpoint"]);
+    } else {
+      await credentials.set("endpoint", answer);
     }
   }
 }

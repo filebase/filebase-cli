@@ -12,6 +12,19 @@ export default class ObjectModule {
       .command("object")
       .description("upload and manage objects");
 
+    subcommand.hook("preAction", async (thisCommand, actionCommand) => {
+      const options = thisCommand.opts();
+      if (typeof options.bucket === "string") {
+        return;
+      }
+      const defaultBucket = await credentials.get("bucket");
+      if (typeof defaultBucket === "undefined") {
+        throw new Error(
+          `Bucket must be passed as an option if no default bucket is set!`,
+        );
+      }
+    });
+
     subcommand
       .command("upload <key> [source]")
       .option("-m, --metadata <metadata>")

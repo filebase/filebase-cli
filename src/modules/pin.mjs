@@ -10,6 +10,23 @@ export default class PinModule {
       .command("pin")
       .description("create and manage pins");
 
+    subcommand.hook("preAction", async (thisCommand, actionCommand) => {
+      if (["download"].includes(actionCommand.name())) {
+        return;
+      }
+
+      const options = thisCommand.opts();
+      if (typeof options.bucket === "string") {
+        return;
+      }
+      const defaultBucket = await credentials.get("bucket");
+      if (typeof defaultBucket === "undefined") {
+        throw new Error(
+          `Bucket must be passed as an option if no default bucket is set!`,
+        );
+      }
+    });
+
     subcommand
       .command("list")
       .description("lists the pins")
@@ -109,8 +126,10 @@ export default class PinModule {
           await credentials.get("key"),
           await credentials.get("secret"),
           {
-            endpoint: await credentials.get("endpoint"),
-            token: await credentials.get("token"),
+            gateway: {
+              endpoint: await credentials.get("endpoint"),
+              token: await credentials.get("token"),
+            },
           },
         );
         const readStream = await pinManager.download(cid);
