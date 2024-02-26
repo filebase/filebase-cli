@@ -1,9 +1,6 @@
 name: Build CLI
 
-on:
-  push:
-    tags:
-      - "v*.*.*"
+on: [push]
 
 jobs:
   build-ubuntu:
