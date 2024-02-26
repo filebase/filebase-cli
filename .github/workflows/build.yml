@@ -8,7 +8,15 @@ on:
 jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+        node-version:
+          - 21
+        os:
+          - linux
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -22,12 +30,20 @@ jobs:
       - run: npx postject filebase_ NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_linux-amd64
+          name: filebase_${{matrix.os}}-${{ matrix.arch }}
           path: filebase
 
   build-macos:
     runs-on: macos-latest
-
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+        node-version:
+          - 21
+        os:
+          - macos
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -39,16 +55,24 @@ jobs:
       - run: yarn run package
       - run: cp $(command -v node) filebase
       - run: codesign --remove-signature filebase
-      - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
+      - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 --macho-segment-name NODE_SEA
       - run: codesign --sign - filebase
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase-macos
+          name: filebase_${{matrix.os}}-${{ matrix.arch }}
           path: filebase
 
   build-windows:
     runs-on: windows-latest
-
+    strategy:
+      matrix:
+        arch:
+          - x64
+          - arm64
+        node-version:
+          - 21
+        os:
+          - win
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -62,6 +86,6 @@ jobs:
       - run: npx postject filebase.exe NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase-windows
+          name: filebase_${{matrix.os}}-${{ matrix.arch }}
           path: filebase.exe
 
