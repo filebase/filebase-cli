@@ -80,7 +80,7 @@ jobs:
       - run: yarn run build
       - run: yarn run package
       - run: node -e "require('fs').copyFileSync(process.execPath, 'filebase.exe')"
-      - run: "C:\Program Files (x86)\Microsoft SDKs\ClickOnce\SignTool\signtool.exe" remove /s filebase.exe
+      - run: "C:\\Program Files (x86)\\Microsoft SDKs\\ClickOnce\\SignTool\\signtool.exe" remove /s filebase.exe
       - run: npx postject filebase.exe NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
