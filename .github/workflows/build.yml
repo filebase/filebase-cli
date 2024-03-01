@@ -24,7 +24,7 @@ jobs:
       - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_${{matrix.os}}
+          name: filebase_${{matrix.os}}_x64
           path: filebase
 
   build-macos:
