@@ -7,11 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        arch:
-          - i386
-          - arm
-          - x64
-          - arm64
         node-version:
           - 21
         os:
@@ -29,16 +24,13 @@ jobs:
       - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_${{matrix.os}}-${{ matrix.arch }}
+          name: filebase_${{matrix.os}}
           path: filebase
 
   build-macos:
     runs-on: macos-latest
     strategy:
       matrix:
-        arch:
-          - x64
-          - arm64
         node-version:
           - 21
         os:
@@ -58,16 +50,13 @@ jobs:
       - run: codesign --sign - filebase
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_${{matrix.os}}-${{ matrix.arch }}
+          name: filebase_${{matrix.os}}_x64
           path: filebase
 
   build-windows:
     runs-on: windows-latest
     strategy:
       matrix:
-        arch:
-          - x64
-          - arm64
         node-version:
           - 21
         os:
@@ -89,6 +78,6 @@ jobs:
       - run: npx postject filebase.exe NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_${{matrix.os}}-${{ matrix.arch }}
+          name: filebase_${{matrix.os}}_x64
           path: filebase.exe
 
