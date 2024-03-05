@@ -4,13 +4,16 @@
   "description": "CLI for Interacting with Filebase Services [S3(Buckets, Objects), IPFS(Gateways, Pins) IPNS(Names)]",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/filebase/filebase-sdk.git"
+    "url": "git+https://github.com/filebase/filebase-cli.git"
   },
   "license": "MIT",
   "main": "dist/index.js",
   "files": [
     "dist"
   ],
+  "bin": {
+    "filebase": "dist/index.js"
+  },
   "engines": {
     "node": ">=16.0.0",
     "npm": ">=8.0.0"

@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 // threading setup
 import os from "node:os";
 const CPU_COUNT = os.cpus().length;
