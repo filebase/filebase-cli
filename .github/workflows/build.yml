@@ -3,14 +3,8 @@ name: Build CLI
 on: [push]
 
 jobs:
-  build-ubuntu:
+  build-ubuntu-x64:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version:
-          - 21
-        os:
-          - linux
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -24,17 +18,14 @@ jobs:
       - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_${{matrix.os}}_x64
-          path: filebase
+          name: filebase_linux_x64
+          path: |
+            filebase
+            README.md
+            LICENSE
 
-  build-macos:
+  build-macos-x64:
     runs-on: macos-latest
-    strategy:
-      matrix:
-        node-version:
-          - 21
-        os:
-          - macos
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -50,17 +41,14 @@ jobs:
       - run: codesign --sign - filebase
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_${{matrix.os}}_x64
-          path: filebase
+          name: filebase_macos_x64
+          path: |
+            filebase
+            README.md
+            LICENSE
 
-  build-windows:
+  build-windows-x64:
     runs-on: windows-latest
-    strategy:
-      matrix:
-        node-version:
-          - 21
-        os:
-          - win
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js
@@ -78,6 +66,9 @@ jobs:
       - run: npx postject filebase.exe NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
       - uses: actions/upload-artifact@v4
         with:
-          name: filebase_${{matrix.os}}_x64
-          path: filebase.exe
+          name: filebase_windows_x64
+          path: |
+            filebase.exe
+            README.md
+            LICENSE
 
