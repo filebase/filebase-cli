@@ -91,7 +91,6 @@ import InstallModule from "./modules/install.mjs";
     name: ["create", "import", "delete", "list", "toggle", "update", "help"],
     object: ["upload", "get", "download", "delete", "list", "copy", "help"],
     pin: ["create", "replace", "download", "get", "delete", "list", "help"],
-    setup: [],
     uninstall: [],
     version: [],
   });
