@@ -63,6 +63,37 @@ jobs:
         with:
           files: filebase_macos_x64.zip
 
+  build-macos-arm64:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '21.x'
+      - run: yarn install --frozen-lockfile
+      - run: yarn run build
+      - run: yarn run package
+      - run: cp $(command -v node) filebase
+      - run: codesign --remove-signature filebase
+      - run: npx postject filebase NODE_SEA_BLOB sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 --macho-segment-name NODE_SEA
+      - run: codesign --sign - filebase
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filebase_macos_arm64
+          path: |
+            filebase
+            README.md
+            LICENSE
+      - name: Compress Archive
+        run: zip filebase_macos_arm64.zip filebase README.md LICENSE
+        if: startsWith(github.ref, 'refs/tags/')
+      - name: Upload Release Artifact
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: filebase_macos_arm64.zip
+
   build-windows-x64:
     runs-on: windows-latest
     steps:
