@@ -2,7 +2,7 @@
 
 # Define the application executable name and its current location
 set appName "filebase"
-set currentAppPath "$appName"
+set currentAppPath "../$appName"
 
 # Function to check if a path is in the PATH environment variable
 function isInPath
@@ -26,5 +26,8 @@ sudo cp "$currentAppPath" "$installPath/$appName"
 
 # Make sure the executable has execution permissions
 sudo chmod +x "$installPath/$appName"
+
+# Setup Autocompletion
+echo 'filebase --completion-fish | source' >> ~/.config/fish/config.fish
 
 echo "Installation complete. You can now run $appName from the terminal."

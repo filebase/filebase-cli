@@ -27,4 +27,7 @@ sudo cp "$currentAppPath" "$installPath/$appName"
 # Make sure the executable has execution permissions
 sudo chmod +x "$installPath/$appName"
 
+# Setup Autocompletion
+echo '. <(filebase --completion)' >> ~/.zshrc
+
 echo "Installation complete. You can now run $appName from the terminal."

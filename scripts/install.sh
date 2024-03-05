@@ -27,4 +27,8 @@ sudo cp "$currentAppPath" "$installPath/$appName"
 # Make sure the executable has execution permissions
 sudo chmod +x "$installPath/$appName"
 
+# Setup Autocompletion
+filebase --completion >> ~/.config/filebase.completion.sh
+echo 'source ~/.config/filebase.completion.sh' >> ~/.bash_profile
+
 echo "Installation complete. You can now run $appName from the terminal."
