@@ -12,6 +12,7 @@
     "dist"
   ],
   "bin": {
+    "@filebase/cli": "dist/index.js",
     "filebase": "dist/index.js"
   },
   "engines": {

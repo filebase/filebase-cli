@@ -20,7 +20,7 @@ import NameModule from "./modules/name.mjs";
 import ObjectModule from "./modules/object.mjs";
 import PinModule from "./modules/pin.mjs";
 import VersionModule from "./modules/version.mjs";
-import InstallModule from "./modules/install.mjs";
+import UninstallModule from "./modules/uninstall.mjs";
 
 (async () => {
   const program = new Command(),
@@ -112,7 +112,7 @@ import InstallModule from "./modules/install.mjs";
   new AuthModule(program, credentials);
   new BucketModule(program, credentials);
   new GatewayModule(program, credentials);
-  new InstallModule(program, credentials);
+  new UninstallModule(program, credentials);
   new NameModule(program, credentials);
   new ObjectModule(program, credentials, stdin);
   new PinModule(program, credentials);
