@@ -12,7 +12,6 @@
     "dist"
   ],
   "bin": {
-    "@filebase/cli": "dist/index.js",
     "filebase": "dist/index.js"
   },
   "engines": {
@@ -37,6 +36,7 @@
     "@filebase/sdk": "1.0.3",
     "@inquirer/select": "2.0.0",
     "commander": "11.1.0",
+    "graceful-fs": "4.2.11",
     "inquirer": "9.2.14",
     "omelette": "0.4.17",
     "recursive-fs": "2.1.0",
