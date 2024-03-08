@@ -33,7 +33,7 @@
     "distributed"
   ],
   "dependencies": {
-    "@filebase/sdk": "filebase/filebase-sdk#195d1184def58097c63a5d76b3ac55186b2f83cf",
+    "@filebase/sdk": "filebase/filebase-sdk#1218a96bfbda6422fd0f091f54046664c756f81a",
     "@inquirer/select": "2.0.0",
     "commander": "11.1.0",
     "graceful-fs": "4.2.11",

@@ -729,9 +729,9 @@
   resolved "https://registry.yarnpkg.com/@esbuild/win32-x64/-/win32-x64-0.19.12.tgz#c57c8afbb4054a3ab8317591a0b7320360b444ae"
   integrity sha512-T1QyPSDCyMXaO3pzBkF96E8xMkiRYbUEZADd29SyPGabqxMViNoii+NcK7eWJAEoU6RZyEm5lVSIjTmcdoB9HA==
 
-"@filebase/sdk@filebase/filebase-sdk#195d1184def58097c63a5d76b3ac55186b2f83cf":
+"@filebase/sdk@filebase/filebase-sdk#1218a96bfbda6422fd0f091f54046664c756f81a":
   version "1.0.4"
-  resolved "https://codeload.github.com/filebase/filebase-sdk/tar.gz/195d1184def58097c63a5d76b3ac55186b2f83cf"
+  resolved "https://codeload.github.com/filebase/filebase-sdk/tar.gz/1218a96bfbda6422fd0f091f54046664c756f81a"
   dependencies:
     "@aws-sdk/client-s3" "3.478.0"
     "@aws-sdk/lib-storage" "3.478.0"
