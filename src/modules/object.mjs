@@ -1,4 +1,4 @@
-import gracefulFs from "graceful-fs";
+import { createReadStream, statSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { ObjectManager } from "@filebase/sdk";
@@ -45,19 +45,17 @@ export default class ObjectModule {
             throw new Error(`Source must be defined if not piping in a file`);
           }
           const resolvedSource = resolve(source);
-          const pathStats = await gracefulFs.statSync(resolvedSource);
+          const pathStats = statSync(resolvedSource);
           if (pathStats.isFile()) {
-            objectToUpload = gracefulFs.createReadStream(resolvedSource);
+            objectToUpload = createReadStream(resolvedSource);
           } else {
             const { files } = await rfs.read(resolvedSource);
-            const filteredFiles = files.filter((file) => {
-              const pathStats = gracefulFs.statSync(file);
-              return pathStats.isFile();
-            });
-            objectToUpload = filteredFiles.map((file) => {
+            objectToUpload = files.map((file) => {
+              const pathStats = statSync(file);
               return {
                 path: file.replace(resolvedSource, ""),
-                content: gracefulFs.createReadStream(file),
+                type: "import",
+                content: pathStats.isFile() ? file : null,
               };
             });
           }

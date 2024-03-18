@@ -2,17 +2,17 @@
 setlocal
 
 :: Define the application executable name and its current location
-set "appName=filebase.exe"
-set "currentAppPath=%appName%"
+set "appName=filebase"
+set "currentAppPath=%appName%.exe"
 
 :: Define the target installation directory in Program Files
-set "installPath=%ProgramFiles%\filebase"
+set "installPath=%ProgramFiles%\%appName%"
 
 :: Create the target directory if it doesn't exist
 if not exist "%installPath%" mkdir "%installPath%"
 
 :: Copy the application executable to the target directory
-copy "%currentAppPath%" "%installPath%"
+copy "%currentAppPath%" "%installPath%" /y
 
 :: Add the application's directory to the system PATH environment variable
 :: This allows the application to be run from anywhere in the terminal

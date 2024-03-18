@@ -33,10 +33,9 @@
     "distributed"
   ],
   "dependencies": {
-    "@filebase/sdk": "filebase/filebase-sdk#1218a96bfbda6422fd0f091f54046664c756f81a",
+    "@filebase/sdk": "1.0.4",
     "@inquirer/select": "2.0.0",
     "commander": "11.1.0",
-    "graceful-fs": "4.2.11",
     "inquirer": "9.2.14",
     "omelette": "0.4.17",
     "recursive-fs": "2.1.0",

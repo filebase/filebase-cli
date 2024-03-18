@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 // threading setup
 import os from "node:os";
-const CPU_COUNT = os.cpus().length;
+const CPU_COUNT = os.cpus().length > 4 ? os.cpus().length : 4;
 process.env.UV_THREADPOOL_SIZE = String(CPU_COUNT);
 // node imports
 import { constants as fsConstants } from "node:fs";
@@ -20,7 +20,6 @@ import NameModule from "./modules/name.mjs";
 import ObjectModule from "./modules/object.mjs";
 import PinModule from "./modules/pin.mjs";
 import VersionModule from "./modules/version.mjs";
-import UninstallModule from "./modules/uninstall.mjs";
 
 (async () => {
   const program = new Command(),
@@ -91,7 +90,6 @@ import UninstallModule from "./modules/uninstall.mjs";
     name: ["create", "import", "delete", "list", "toggle", "update", "help"],
     object: ["upload", "get", "download", "delete", "list", "copy", "help"],
     pin: ["create", "replace", "download", "get", "delete", "list", "help"],
-    uninstall: [],
     version: [],
   });
   completion.init();
@@ -112,7 +110,6 @@ import UninstallModule from "./modules/uninstall.mjs";
   new AuthModule(program, credentials);
   new BucketModule(program, credentials);
   new GatewayModule(program, credentials);
-  new UninstallModule(program, credentials);
   new NameModule(program, credentials);
   new ObjectModule(program, credentials, stdin);
   new PinModule(program, credentials);
