@@ -1,5 +1,5 @@
-import { createReadStream } from "node:fs";
-import { stat, writeFile } from "node:fs/promises";
+import { createReadStream, statSync } from "node:fs";
+import { writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { ObjectManager } from "@filebase/sdk";
 import inquirer from "inquirer";
@@ -45,15 +45,17 @@ export default class ObjectModule {
             throw new Error(`Source must be defined if not piping in a file`);
           }
           const resolvedSource = resolve(source);
-          const pathStats = await stat(resolvedSource);
+          const pathStats = statSync(resolvedSource);
           if (pathStats.isFile()) {
             objectToUpload = createReadStream(resolvedSource);
           } else {
             const { files } = await rfs.read(resolvedSource);
             objectToUpload = files.map((file) => {
+              const pathStats = statSync(file);
               return {
                 path: file.replace(resolvedSource, ""),
-                content: createReadStream(file),
+                type: "import",
+                content: pathStats.isFile() ? file : null,
               };
             });
           }

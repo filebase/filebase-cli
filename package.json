@@ -1,6 +1,6 @@
 {
   "name": "@filebase/cli",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "CLI for Interacting with Filebase Services [S3(Buckets, Objects), IPFS(Gateways, Pins) IPNS(Names)]",
   "repository": {
     "type": "git",
@@ -12,7 +12,6 @@
     "dist"
   ],
   "bin": {
-    "@filebase/cli": "dist/index.js",
     "filebase": "dist/index.js"
   },
   "engines": {
@@ -34,7 +33,7 @@
     "distributed"
   ],
   "dependencies": {
-    "@filebase/sdk": "1.0.3",
+    "@filebase/sdk": "1.0.4",
     "@inquirer/select": "2.0.0",
     "commander": "11.1.0",
     "inquirer": "9.2.14",

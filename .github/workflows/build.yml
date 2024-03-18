@@ -133,12 +133,11 @@ jobs:
           name: filebase_windows_x64
           path: |
             install.bat
-            install.ps1
             filebase.exe
             README.md
             LICENSE
       - name: Compress Archive
-        run: Compress-Archive -Path ".\filebase.exe", ".\README.md", ".\LICENSE", ".\install.bat", ".\install.ps1" filebase_windows_x64.zip
+        run: Compress-Archive -Path ".\filebase.exe", ".\README.md", ".\LICENSE", ".\install.bat" filebase_windows_x64.zip
         if: startsWith(github.ref, 'refs/tags/')
       - name: Upload Release Artifact
         uses: softprops/action-gh-release@v1
