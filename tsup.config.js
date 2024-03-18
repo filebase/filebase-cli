@@ -9,7 +9,6 @@ export default defineConfig({
     "@inquirer/select",
     "blockstore-fs",
     "commander",
-    "graceful-fs",
     "inquirer",
     "omelette",
     "recursive-fs",
